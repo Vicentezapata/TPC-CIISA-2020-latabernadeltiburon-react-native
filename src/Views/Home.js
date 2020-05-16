@@ -1,37 +1,60 @@
-import React , { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Card,Input,Button,Icon } from 'react-native-elements'
+import * as React from 'react';
+import {View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text,Icon } from 'react-native-elements'
+import {styles,Colors,Sizes} from '../Styles/Styles';
+import Ingredientes from './Ingredientes';
+import Cocteles from './Cocteles';
+import VideoCallBarTender from './VideoCallBarTender';
 
-
-//CREACION DEL COMPONENTE
-class Login extends Component{
-    render(){
-        return (
-            
-            <View style={styles.container}>
-                <Card containerStyle = {styles.card}>
-                <Text>PANTALLA 2</Text>
-                </Card>
-            </View>
-            
-            
-        );
-    }
+const Tab = createBottomTabNavigator();
+function MyTabs() {
+  return (
+    <Tab.Navigator
+    initialRouteName="Cocteles"
+      tabBarOptions={{
+        activeTintColor: Colors.accent,
+        inactiveTintColor: Colors.accent,
+        inactiveBackgroundColor: Colors.primary,
+        activeBackgroundColor: Colors.darkPrimary,
+        style: { backgroundColor: Colors.darkPrimary },
+      }}>
+      <Tab.Screen name="Cocteles" component={Cocteles} 
+        options={{tabBarLabel: 'Cocteles',
+            tabBarIcon: ({ color, size }) => (
+              <Icon name='cocktail'
+              type='font-awesome-5' 
+              color={Colors.accent} size={Sizes.icon} />
+            ),
+          }} 
+        />
+      <Tab.Screen name="Ingredientes" component={Ingredientes} 
+        options={{
+          tabBarLabel: 'Ingredientes',
+          tabBarIcon: () => (
+              <Icon name='lemon'
+              type='font-awesome-5' 
+              color={Colors.accent} size={Sizes.icon} />
+            ),
+          }} 
+      />
+      <Tab.Screen name="VideoCallBarTender" component={VideoCallBarTender} 
+        options={{
+          tabBarLabel: 'VideoCallBarTender',
+          tabBarIcon: () => (
+              <Icon name='lemon'
+              type='font-awesome-5' 
+              color={Colors.accent} size={Sizes.icon} />
+            ),
+          }} 
+      />
+    </Tab.Navigator>
+  );
 }
-//make this component available to the app
-export default Login;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    height: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red'
-  },
-});
+export default function App() {
+  return (
+
+      <MyTabs />
+  );
+}

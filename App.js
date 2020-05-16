@@ -1,36 +1,23 @@
-import React, { Component } from 'react';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack'
-// VISTAS
-import LoginScreen from './src/Views/Login';
-import HomeScreen from './src/Views/Home';
+import * as React from 'react';
+import { Button, View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { navigationRef } from './src/Controller/NavigationService';
+import Login from './src/Views/Login';
+import Home from './src/Views/Home';
+import HomeAdmin from './src/Views/HomeAdmin';
 
-import NavigationService from './src/Components/NavigationService';
-
-
-const RootStack = createStackNavigator(
-  {
-    Login: LoginScreen,
-    Home: HomeScreen,
-  },
-  {
-    headerMode: 'none',
-    initialRouteName: 'Login',
-  }
-);
-
-const AppContainer = createAppContainer(RootStack);
-
-export default class App extends Component {
-  render() {
-    //return <AppContainer />;
-    return (
-      <AppContainer
-        ref={navigatorRef => {
-          NavigationService.setTopLevelNavigator(navigatorRef);
-        }}
-      />
-    );
-
-  }
+const Stack = createStackNavigator();
+export default function App() {
+  return (
+    <NavigationContainer  ref={navigationRef}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="HomeAdmin" component={HomeAdmin} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
+
+

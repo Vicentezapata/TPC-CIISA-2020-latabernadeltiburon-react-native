@@ -1,9 +1,10 @@
 import React from 'react';
-import { View,KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard,Text } from 'react-native';
 import {styles,Colors} from '../Styles/Styles';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeAdminDashboard from '../Components/HomeAdminDashboard';
 import Home from './Home';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import UploadCocktail from '../Components/UploadCocktail';
+import LeerCodigo from '../Components/LeerCodigo';
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
@@ -20,6 +21,8 @@ function MyDrawer() {
     >
             <Drawer.Screen name="Menu principal" component={HomeAdminDashboard} />
             <Drawer.Screen name="Vista Usuario" component={Home} />
+            <Drawer.Screen name="Subir recetas" component={UploadCocktail} />
+            <Drawer.Screen name="Escanear codigo" component={LeerCodigo} />
     </Drawer.Navigator>
   )
 }

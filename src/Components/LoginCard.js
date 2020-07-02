@@ -17,27 +17,54 @@ export default class LoginCard extends React.Component {
          displayErrorUsername:'none',
         }     
     } 
+    
 
     //METODO QUE VALIDA LA CLAVE Y EL USUARIO
     _handlePress() { 
+        var body = JSON.stringify({"email": this.state.username,"password" : this.state.password})
+        console.log(body);
         /*NavigationService.navigate('Dashboard')*/
-        if (this.state.username!=="") {
+        if (this.state.username=="") {
             this.setState({displayErrorUsername:'flex'});
           }
           else{
             this.setState({displayErrorUsername:'none'});
           }
-          if (this.state.password!=="") {
+          if (this.state.password=="") {
             this.setState({displayErrorPass:'flex'});
           }
           else{
             this.setState({displayErrorPass:'none'});
           }
-          if (this.state.username=="" && this.state.password=="") {
-            this.setState({displayErrorUsername:'none'});
-            this.setState({displayErrorPass:'none'});
-            NavigationService.navigate('Home');
+          let data = 
+          {
+            method: 'POST',
+            headers:{Accept:'application/json','Content-Type':'application/json'},
+            body:body
           }
+          fetch('http://192.168.99.100:8300/users/login',data)
+          .then((response) => response.json())
+          .then(
+            (responseJson) => 
+            {
+              console.log(responseJson) 
+              console.log(responseJson.permission) 
+              console.log(responseJson.type_user) 
+              if (responseJson.permission=="1" && responseJson.type_user=="user") {
+                this.setState({displayErrorUsername:'none'});
+                this.setState({displayErrorPass:'none'});
+                NavigationService.navigate('Home');
+              }
+              else if (responseJson.permission=="1" && responseJson.type_user=="admin") {
+                this.setState({displayErrorUsername:'none'});
+                this.setState({displayErrorPass:'none'});
+                NavigationService.navigate('HomeAdmin');
+              }
+            }
+          )
+          .catch(
+            (error) => console.error(error) 
+          )
           if (this.state.username=="admin" && this.state.password=="admin") {
             this.setState({displayErrorUsername:'none'});
             this.setState({displayErrorPass:'none'});

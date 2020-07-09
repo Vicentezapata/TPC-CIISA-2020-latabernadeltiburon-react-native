@@ -7,22 +7,24 @@ import {styles,Colors} from '../Styles/Styles';
 import * as NavigationService from '../Controller/NavigationService';
 
 
-export default class LoginCard extends React.Component {
+export default class RegisterCard extends React.Component {
     constructor(props){ 
         super(props) 
         this.state = { 
-         username: '', 
-         password: '', 
-         displayErrorPass:'none',
-         displayErrorUsername:'none',
+          email: '', 
+          password: '', 
+          name: '', 
+          displayErrorPass:'none',
+          displayErrorUsername:'none',
+          displayErrorName:'none',
         }     
     } 
     
 
     //METODO QUE VALIDA LA CLAVE Y EL USUARIO
     _handlePress() { 
-        var body = JSON.stringify({"email": this.state.username,"password" : this.state.password})
-        console.log(body);
+        var bodyEnviar = JSON.stringify({"email": this.state.email,"password" : this.state.password,"name":this.state.name,"type_user":'user'})
+        console.log(bodyEnviar);
         /*NavigationService.navigate('Dashboard')*/
         if (this.state.username=="") {
             this.setState({displayErrorUsername:'flex'});
@@ -36,21 +38,21 @@ export default class LoginCard extends React.Component {
           else{
             this.setState({displayErrorPass:'none'});
           }
+          //ENVIAMOS VALORES
           let data = 
           {
             method: 'POST',
             headers:{Accept:'application/json','Content-Type':'application/json'},
-            body:body
+            body:bodyEnviar
           }
-          fetch('http://192.168.0.18:8300/users/login',data)
+          fetch('http://192.168.0.18:8300/users/store',data)
           .then((response) => response.json())
           .then(
             (responseJson) => 
             {
               console.log(responseJson) 
-              console.log(responseJson.permission) 
-              console.log(responseJson.type_user) 
-              if (responseJson.permission=="1" && responseJson.type_user=="user") {
+              NavigationService.navigate('Login');
+              /*if (responseJson.permission=="1" && responseJson.type_user=="user") {
                 this.setState({displayErrorUsername:'none'});
                 this.setState({displayErrorPass:'none'});
                 NavigationService.navigate('Home');
@@ -59,17 +61,12 @@ export default class LoginCard extends React.Component {
                 this.setState({displayErrorUsername:'none'});
                 this.setState({displayErrorPass:'none'});
                 NavigationService.navigate('HomeAdmin');
-              }
+              }*/
             }
           )
           .catch(
             (error) => console.error(error) 
           )
-          if (this.state.username=="admin" && this.state.password=="admin") {
-            this.setState({displayErrorUsername:'none'});
-            this.setState({displayErrorPass:'none'});
-            NavigationService.navigate('HomeAdmin');
-          }
         //console.log(this.state.username); 
         //console.log(this.state.password);
     } 
@@ -80,7 +77,7 @@ export default class LoginCard extends React.Component {
           }
     //METODO QUE MUESTRA POP UP DE REGISTRARSE
     _signup() {
-      NavigationService.navigate('Register');
+        Alert.alert("¿Deseas registrarse?");
     }
     render() {
       const { navigation } = this.props;
@@ -98,12 +95,23 @@ export default class LoginCard extends React.Component {
               />
             <Input
                   labelStyle={{color:'black'}}
-                  label='Usuario'
+                  label='Correo'
                   ref={component => this._username = component}
-                  placeholder='Usuario'
+                  placeholder='Correo'
                   rightIcon={{ type: 'font-awesome', name: 'user' }}
                   errorStyle={{ color: 'red',display:this.state.displayErrorUsername }}
-                  onChangeText={(text) => this.setState({username:text})}
+                  onChangeText={(text) => this.setState({email:text})}
+                  errorMessage='Usuario invalido'
+                  containerStyle={{marginLeft:'3%',width: wp('80%')}}
+            />
+            <Input
+                  labelStyle={{color:'black'}}
+                  label='Nombre'
+                  ref={component => this._username = component}
+                  placeholder='Nombre'
+                  rightIcon={{ type: 'font-awesome', name: 'user' }}
+                  errorStyle={{ color: 'red',display:this.state.displayErrorUsername }}
+                  onChangeText={(text) => this.setState({name:text})}
                   errorMessage='Usuario invalido'
                   containerStyle={{marginLeft:'3%',width: wp('80%')}}
             />
@@ -122,11 +130,9 @@ export default class LoginCard extends React.Component {
             <Button
                 //iconRight ={{ type: 'font-awesome-5', name: 'sign-in-alt' }}
                 buttonStyle={{backgroundColor:Colors.darkPrimary,width: wp('40%'), marginBottom: 0, marginTop: 20}}
-                title='Iniciar sesion' 
+                title='Registrarse' 
                 onPress={() => this._handlePress()}
             />
-            <Button  type="outline" buttonStyle={{marginBottom: 0,width: wp('30%'),borderColor:'black', marginTop: 20}} titleStyle={{color:'black'}} onPress={() => this._forgotPass()} title='Recuperar Contraseña'/>
-            <Button  type="outline" buttonStyle={{marginBottom: 0,width: wp('30%'),borderColor:'black', marginTop: 10}} titleStyle={{color:'black'}} onPress={() => this._signup()} title='Registrarse'/>
           </Card>         
         </View>
       );

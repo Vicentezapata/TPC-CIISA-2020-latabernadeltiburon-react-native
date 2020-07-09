@@ -7,6 +7,7 @@ import * as Permissions from "expo-permissions";
 export default class UploadCocktail extends React.Component {
   state = {
     image: null,
+    base64:''
   };
   render() {
     let { image } = this.state;
@@ -75,6 +76,8 @@ export default class UploadCocktail extends React.Component {
       });
       if (!result.cancelled) {
         this.setState({ image: result.uri });
+        this.setState({ base64: result.base64 });
+        console.log(result.base64)
       }
 
       //console.log(result);

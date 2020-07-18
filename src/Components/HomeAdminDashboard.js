@@ -3,18 +3,26 @@ import { View,KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard,Text } from
 import {styles,Colors} from '../Styles/Styles';
 import { FlatList } from 'react-native';
 import * as NavigationService from '../Controller/NavigationService';
+import * as GlobalValues from '../Controller/GlobalValues';
+import AsyncStorage from '@react-native-community/async-storage';
 import { ListItem,Card,SearchBar } from 'react-native-elements';
 export default class HomeAdmin extends React.Component{
     constructor(props){
         super(props)
         this.state = { 
             listUsers: '', 
-            searchItem:''
+            searchItem:'',
+            user:'',
+            permission:'',
         }   
     }
-    componentDidMount = () =>{
-        this.getUsers()
-        console.log(this.props)
+    componentDidMount = async()=>{
+        user_email = await GlobalValues.obtener('user_email');
+        this.setState({user:user_email})
+        type_user = await GlobalValues.obtener('type_user');
+        this.setState({permission:type_user})
+        /*this.getUsers()
+        console.log(this.props)*/
     }
     getUsers = async() =>{
         const url = 'http://192.168.0.18:8300/users/index'
@@ -33,7 +41,7 @@ export default class HomeAdmin extends React.Component{
         return (
             <View style={styles.listDash}>
                 <Card wrapperStyle={styles.containerCardList} containerStyle={{width:'97%', height: '98%',paddingTop:'20%'}} >
-                <Text h1>Hola administrador</Text>
+                <Text h1>Hola {this.state.user} permiso {this.state.permission}</Text>
                 <View style={{width:'100%',height:'100%'}}>
                     <FlatList 
                         ListHeaderComponent={

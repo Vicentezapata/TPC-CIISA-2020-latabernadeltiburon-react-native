@@ -5,6 +5,8 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import Image from 'react-native-scalable-image';
 import {styles,Colors} from '../Styles/Styles';
 import * as NavigationService from '../Controller/NavigationService';
+import * as GlobalValues from '../Controller/GlobalValues';
+
 
 
 export default class LoginCard extends React.Component {
@@ -15,8 +17,17 @@ export default class LoginCard extends React.Component {
          password: '', 
          displayErrorPass:'none',
          displayErrorUsername:'none',
+         permission:'',
         }     
     } 
+
+   almacenar = async (key,value) => {
+      try {
+        await AsyncStorage.setItem(key, value);
+      } catch (error) {
+        console.log('error:'+error)
+      }
+  };
     
 
     //METODO QUE VALIDA LA CLAVE Y EL USUARIO
@@ -42,7 +53,7 @@ export default class LoginCard extends React.Component {
             headers:{Accept:'application/json','Content-Type':'application/json'},
             body:body
           }
-          fetch('http://192.168.0.18:8300/users/login',data)
+          fetch('http://192.168.0.14:8300/users/login',data)
           .then((response) => response.json())
           .then(
             (responseJson) => 
@@ -50,12 +61,18 @@ export default class LoginCard extends React.Component {
               console.log(responseJson) 
               console.log(responseJson.permission) 
               console.log(responseJson.type_user) 
+              //SI REQUIERO USAR VARIABLE ESTADO SERIA
+              GlobalValues.almacenar('user_email',this.state.username)
               if (responseJson.permission=="1" && responseJson.type_user=="user") {
+                //SI REQUIERO OBTENER DE LA BASE DE DATOS SERIA COMO
+                GlobalValues.almacenar('type_user','user')
                 this.setState({displayErrorUsername:'none'});
                 this.setState({displayErrorPass:'none'});
                 NavigationService.navigate('Home');
               }
               else if (responseJson.permission=="1" && responseJson.type_user=="admin") {
+                //SI REQUIERO OBTENER DE LA BASE DE DATOS SERIA COMO
+                GlobalValues.almacenar('type_user','admin')
                 this.setState({displayErrorUsername:'none'});
                 this.setState({displayErrorPass:'none'});
                 NavigationService.navigate('HomeAdmin');
@@ -68,6 +85,7 @@ export default class LoginCard extends React.Component {
           if (this.state.username=="admin" && this.state.password=="admin") {
             this.setState({displayErrorUsername:'none'});
             this.setState({displayErrorPass:'none'});
+            GlobalValues.almacenar('mail',this.state.username)
             NavigationService.navigate('HomeAdmin');
           }
         //console.log(this.state.username); 

@@ -53,7 +53,7 @@ export default class LoginCard extends React.Component {
             headers:{Accept:'application/json','Content-Type':'application/json'},
             body:body
           }
-          fetch('http://192.168.0.14:8300/users/login',data)
+          fetch('http://192.168.0.10:8300/users/login',data)
           .then((response) => response.json())
           .then(
             (responseJson) => 
